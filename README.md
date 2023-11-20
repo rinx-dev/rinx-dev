@@ -1,1 +1,1 @@
-# 👋 Hi, I’m Rinx
+# 👋 Hi there, I’m Rinx
