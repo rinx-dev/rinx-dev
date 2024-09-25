@@ -35,11 +35,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
-      - name: Package manager
-        id: package-manager
-        uses: oven-sh/setup-bun@v2
-        
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -47,15 +43,11 @@ jobs:
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
           
-      - name: install package
-        run: bun install
-        working-directory: ${{ env.BUILD_PATH }}
-          
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
       - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        run: bun install
         working-directory: ${{ env.BUILD_PATH }}
       - name: Build with Astro
         run: |
