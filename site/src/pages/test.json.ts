@@ -1,11 +1,19 @@
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = ({ params, request }) => {
-  console.log(request.headers.get("User-Agent"));
+  let reqHeaders: Record<string, string>[] = [];
+
+  request.headers.forEach((value, key) => {
+    reqHeaders.push({
+      key,
+      value,
+    });
+  });
 
   return new Response(
     JSON.stringify({
       message: "This was a GET!",
+      reqHeaders,
     })
   );
 };
@@ -25,6 +33,7 @@ export const DELETE: APIRoute = ({ request }) => {
     })
   );
 };
+``;
 
 export const ALL: APIRoute = ({ request }) => {
   return new Response(
