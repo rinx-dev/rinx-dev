@@ -10,9 +10,9 @@ import Layout from "@/components/Layout.astro";
     <ul role="list" class="link-card-grid">
       <Card
         href="https://otp.rinx.dev/"
-        title="OTP"
+        title="One Time Password (OTP)"
         body="Generate and validate time-based OTP (one time password) for multi-factor authentication."
-        badges={["Next.js", "Fluent UI", "PWA"]}
+        badges={["Next.js", "PWA"]}
       />
     </ul>
   </main>
@@ -22,7 +22,6 @@ import Layout from "@/components/Layout.astro";
   main {
     margin: auto;
     padding: 1rem;
-    color: white;
     font-size: 20px;
     line-height: 1.6;
   }
@@ -32,18 +31,7 @@ import Layout from "@/components/Layout.astro";
     line-height: 2.5rem;
     display: block;
     margin-bottom: 1.5rem;
-    color: rgb(var(--accent));
-    background-image: var(--accent-gradient);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .text-gradient {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    background-position: 0%;
+    color: #000000;
   }
   .link-card-grid {
     display: grid;
