@@ -29,9 +29,17 @@ const { href, title, body, badges } = Astro.props;
 </li>
 
 <style>
+  li {
+    filter: grayscale(1);
+    transition: filter 0.2s ease-in-out;
+  }
+  li:hover {
+    filter: grayscale(0);
+  }
   /* Title container */
   .title-container {
     background-color: rgb(231, 123, 111);
+    border-bottom: 2px solid black;
   }
 
   /* Common padding for containers */

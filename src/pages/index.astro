@@ -1,23 +1,147 @@
 ---
 export const prerender = true;
 import Card from "@/components/Card.astro";
-import Layout from "@/components/Layout.astro";
+import Layout from "@/components/layout/Layout.astro";
+const tools = [
+  {
+    summary: "Language: Typescript",
+    list: [
+      `Why TypeScript? TypeScript elevates your JavaScript projects with
+              robust static typing, making code easier to understand, maintain,
+              and refactor. It catches errors early in the development process,
+              enhances IDE support, and ensures your code is reliable and
+              scalable. Perfect for those who value clean, maintainable code.`,
+    ],
+  },
+  {
+    summary: "Frontend: React, Next.js",
+    list: [
+      ` Their component-based architecture ensures scalable, maintainable
+              code, while server components optimize rendering for faster load
+              times and improved SEO. With server actions, streamline
+              server-side logic, enhancing efficiency. These advanced features
+              collectively enable the creation of dynamic, high-performance web
+              applications.`,
+    ],
+  },
+  {
+    summary: "Styling: TailwindCSS, CSS Modules",
+    list: [
+      `CSS Modules: Modularize your CSS to ensure encapsulation, preventing
+              style conflicts and promoting reuse. It's a modern approach that
+              fits perfectly into component-based development. Clean, local,
+              maintainable styling.`,
+      `Tailwind CSS: Utility-first CSS framework that supercharges your
+              development with pre-defined classes. Achieve custom designs
+              without writing endless CSS, ensuring consistency and efficiency.
+              Tailwind turns styling into a seamless part of your workflow.`,
+    ],
+  },
+  {
+    summary: "Database: Drizzle, Prisma",
+    list: [
+      `Drizzle: Drizzle ORM is lightweight, highly performant, and boasts
+              an intuitive API. It ensures type safety and seamless interaction
+              with the database, which makes your code more maintainable and
+              less prone to runtime errors.`,
+      `Prisma: Prisma stands out with its modern, feature-rich toolkit
+              for database management. It offers robust type safety, powerful
+              querying capabilities, and comprehensive database migrations, all
+              while enhancing developer productivity.`,
+    ],
+  },
+
+  {
+    summary: "Backend: Hono, Express",
+    list: [
+      `Hono is perfect for lightning-fast APIs, optimizing performance
+              without the overhead.`,
+      `Express, on the other hand, is renowned for its flexibility and ease
+              of use, making it the go-to for scalable and maintainable web
+              applications. Combining these frameworks ensures a balance of
+              speed, efficiency, and robust application architecture.`,
+    ],
+  },
+
+  {
+    summary: "Deployment: Cloudflare, Vercel",
+    list: [
+      `Cloudflare is a game-changer for security and performance. It
+              protects your site from threats while speeding up load times with
+              its powerful CDN network.`,
+      `Vercel is perfect for deploying your web projects quickly and
+              efficiently, offering seamless integration with frameworks like
+              Next.js. With Vercel, you get a smooth development experience and
+              blazing-fast delivery.`,
+      `Put together, Cloudflare and Vercel ensure your site is secure,
+              performant, and reliable.`,
+    ],
+  },
+  {
+    summary: "OS: Windows, WSL",
+    list: [`I use Windows Subsystem for Linux (WSL) on my Windows machine.`],
+  },
+
+  {
+    summary: "Tools: VSCode, Git, Figma",
+    list: [
+      `VSCode: A powerful, lightweight code editor with extensive
+              extensions for virtually any programming language. Perfect for
+              efficient coding and debugging.`,
+      `Git: Essential for version control. Keeps your work organized,
+              tracks changes, and allows collaborative development.`,
+      `Figma: Ideal for UI/UX design. It offers real-time collaboration,
+              vector networks, and powerful prototyping tools to bring your
+              designs to life.`,
+    ],
+  },
+];
 ---
 
-<Layout title="RINX.DEV">
+<Layout title="Sreu Naryn">
   <main>
-    <h1>Hobby projects</h1>
-    <ul role="list" class="link-card-grid">
-      <Card
-        href="https://otp.rinx.dev/"
-        title="One Time Password (OTP)"
-        body="Generate and validate time-based OTP (one time password) for multi-factor authentication."
-        badges={["Next.js", "PWA"]}
-      />
-    </ul>
+    <div>
+      <h1>
+        <span>RINx.DEV</span>
+        <span>Sreu Naryn</span>
+      </h1>
+      <p>
+        I'm a frontend developer. I'm currently working at
+        <a href="https://neak.io" target="_blank" rel="noopener noreferrer"
+          >Neak.io</a
+        >.
+      </p>
+    </div>
+    <section>
+      <h2>My Favorite Tools</h2>
+      <div>
+        {
+          tools.map((tool) => (
+            <details>
+              <summary>{tool.summary}</summary>
+              <ul>
+                {tool.list.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+    <section>
+      <h2>Projects</h2>
+      <ul role="list" class="link-card-grid">
+        <Card
+          href="https://otp.rinx.dev/"
+          title="One Time Password (OTP)"
+          body="Generate and validate time-based OTP (one time password) for multi-factor authentication."
+          badges={["Next.js", "PWA"]}
+        />
+      </ul>
+    </section>
   </main>
 </Layout>
-
 <style>
   main {
     margin: auto;
@@ -32,6 +156,31 @@ import Layout from "@/components/Layout.astro";
     display: block;
     margin-bottom: 1.5rem;
     color: #000000;
+    text-transform: lowercase;
+  }
+  h1 > span:nth-child(2) {
+    display: none;
+  }
+  h1:hover > span:nth-child(2) {
+    display: inline;
+  }
+  h1:hover > span:nth-child(1) {
+    display: none;
+  }
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  details[open] summary {
+  }
+  summary {
+    cursor: pointer;
+  }
+  li {
+    list-style: square inside;
+    font-size: 1rem;
+    opacity: 0.8;
   }
   .link-card-grid {
     display: grid;
