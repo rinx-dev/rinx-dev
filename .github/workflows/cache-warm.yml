@@ -1,0 +1,29 @@
+name: Warm Cache
+on:
+  schedule:
+    # Run every 10 minutes (aligned with cache TTL)
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    # Allow manual trigger from GitHub Actions UI
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warm cache
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/api/cache/warm" \
+            -H "Authorization: Bearer ${{ secrets.CACHE_API_KEY }}" \
+            -H "Content-Type: application/json")
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+          
+          if [ "$http_code" -ne 200 ]; then
+            echo "Cache warming failed with status $http_code"
+            exit 1
+          fi
+          
+          echo "Cache warming successful!"
