@@ -1,0 +1,310 @@
+/* Inter Tight 500, subset to the scene labels' capitals (A C D E G H I K L N O P S T U).
+   1.6 KB, so Vite inlines it into this stylesheet: no extra request, no font swap. */
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/inter-tight-500-label.woff2") format("woff2");
+  unicode-range: U+41, U+43-45, U+47-49, U+4B-4C, U+4E-50, U+53-55;
+}
+
+:root {
+  --ink: #0b0b0b;
+  --paper: #ecebe6;
+  --font: "Inter Tight", "Inter", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+
+/* Light system theme before the app sets data-theme, so there's no dark flash. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --ink: #f3f2ee;
+    --paper: #141414;
+    color-scheme: light;
+  }
+}
+
+:root[data-theme="light"] {
+  --ink: #f3f2ee;
+  --paper: #141414;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.site {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* The canvas draws the wordmark; the heading names the page for screen readers and search. */
+.wordmark {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Crisp letter faces, drawn at full device resolution above the dithered stage. */
+.face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  pointer-events: none;
+  /* Its CSS size can be fractional at 1.25x/1.5x; never let the compositor blur it. */
+  image-rendering: pixelated;
+}
+
+/* Without WebGL2 only the dithered stage goes; the pixel wordmark is plain 2D canvas and stays. */
+.site[data-gl="off"] .stage {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Controls: pixel thumbnails (left) and theme toggle (right) ---------- */
+/* Square 1px frames and 1-bit pixel icons, so the controls read as part of the artwork. */
+
+.controls {
+  --gutter: 24px;
+  --frame: color-mix(in srgb, var(--paper) 24%, var(--ink));
+  position: absolute;
+  left: calc(var(--gutter) + env(safe-area-inset-left));
+  right: calc(var(--gutter) + env(safe-area-inset-right));
+  bottom: calc(var(--gutter) + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: none;
+}
+
+.controls > * {
+  pointer-events: auto;
+}
+
+.pixel-icon {
+  display: block;
+  image-rendering: pixelated;
+}
+
+.scenes {
+  position: relative;
+  display: inline-flex;
+  gap: 6px;
+  isolation: isolate;
+}
+
+.scenes [data-slot="segmented-control-item"] {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 38px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--frame);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.scenes [data-slot="segmented-control-item"] .pixel-icon {
+  opacity: 0.55;
+  transition: opacity 120ms steps(3, end);
+}
+
+@media (hover: hover) {
+  .scenes [data-slot="segmented-control-item"]:hover .pixel-icon {
+    opacity: 0.8;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--paper);
+  }
+}
+
+.scenes [data-slot="segmented-control-item"][data-checked] .pixel-icon {
+  opacity: 1;
+}
+
+/* The indicator is a solid 1px frame that steps across to the chosen thumbnail. */
+.scenes [data-slot="segmented-control-indicator"] {
+  position: absolute;
+  z-index: 1;
+  top: var(--segmented-control-indicator-top);
+  left: var(--segmented-control-indicator-left);
+  width: var(--segmented-control-indicator-width);
+  height: var(--segmented-control-indicator-height);
+  box-shadow: inset 0 0 0 1px var(--paper);
+  pointer-events: none;
+  transition-property: left;
+  transition-duration: 200ms;
+  transition-timing-function: steps(5, end);
+}
+
+/* Corner ticks on the chosen frame, like crop marks. */
+.scenes [data-slot="segmented-control-indicator"]::before,
+.scenes [data-slot="segmented-control-indicator"]::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border: 0 solid var(--paper);
+}
+
+.scenes [data-slot="segmented-control-indicator"]::before {
+  top: -4px;
+  left: -4px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.scenes [data-slot="segmented-control-indicator"]::after {
+  right: -4px;
+  bottom: -4px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.scenes [data-slot="segmented-control-indicator"][data-activation-direction="none"],
+.scenes:not([data-ready]) [data-slot="segmented-control-indicator"] {
+  transition: none;
+}
+
+.scenes [data-slot="segmented-control-item"]:focus-visible {
+  outline: 1px solid var(--paper);
+  outline-offset: 3px;
+}
+
+.scenes[data-disabled],
+.site[data-gl="off"] .scene-name {
+  display: none;
+}
+
+/* 404 page: the way home, a framed miniature of the wordmark like the other controls. */
+.home {
+  display: grid;
+  place-items: center;
+  flex: none;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--frame);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.home .pixel-icon {
+  opacity: 0.8;
+  transition: opacity 120ms steps(3, end);
+}
+
+.home:focus-visible {
+  outline: 1px solid var(--paper);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .home:hover {
+    border-color: var(--paper);
+  }
+
+  .home:hover .pixel-icon {
+    opacity: 1;
+  }
+}
+
+.scene-name {
+  font: 500 11px/1 var(--font);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 62%, var(--ink));
+  pointer-events: none;
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--frame);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.theme-toggle:focus-visible {
+  outline: 1px solid var(--paper);
+  outline-offset: 3px;
+}
+
+/* The solid half swaps sides with the theme. */
+.theme-toggle[data-pressed] .theme-icon {
+  transform: scaleX(-1);
+}
+
+/* Phones keep full-size frames (the thumbnails need their margin) and tighten the gaps. */
+@media (max-width: 600px) {
+  .controls {
+    --gutter: 16px;
+    gap: 10px;
+  }
+
+  .scene-name {
+    display: none;
+  }
+
+  .scenes {
+    gap: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scenes [data-slot="segmented-control-indicator"],
+  .scenes [data-slot="segmented-control-item"] .pixel-icon,
+  .home .pixel-icon {
+    transition: none;
+  }
+}
